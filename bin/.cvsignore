@@ -1,0 +1,7 @@
+ApacheJMeter.jar
+HTTPSamplerFullTestFile.txt
+testresults.txt
+*.bak
+*.jtl
+*.log
+*.jmx
