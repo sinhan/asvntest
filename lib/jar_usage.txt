@@ -1,0 +1,69 @@
+Which jars are used by which modules?
+Version: $Revision: 325238 $ $Date: 2005-03-22 14:15:32 -0800 (Tue, 22 Mar 2005) $
+
+avalon-framework-4.1.4
+- LogKit (used by HttpClient ?)
+- Configuration (ResultCollector, SaveService, SampleResult, TestElementSaver)
+
+commons-collections
+- ListenerNotifier
+- Anakia
+
+commons-httpclient-2.0
+- httpclient
+
+commons-logging
+- httpclient
+
+excalibur-logger-1.1
+- httpclient?
+
+(htmlparser)
+- http: parsing html
+
+jakarta-oro
+- regular expressions: various
+
+jdom-b9
+- Anakia
+
+jdom (any release)
+- XMLAssertion, JMeterTest
+
+(jorphan)
+
+js (Rhino)
+- javascript function
+
+junit
+- unit tests
+
+logkit-1.2
+- logging
+- Anakia
+
+soap
+- WebServiceSampler ONLY
+
+Tidy
+- http: various modules for parsing html
+- org.xml.sax - various
+- XPathUtil (XPath assertion)
+
+velocity-1.4
+- Anakia (create documentation) Not used by JMeter runtime. Requires jdom-b9, 1.0 does not work
+
+xalan
++org.apache.xalan|xml|xpath
+
+xercesimpl
++org.apache.html.dom|org.apache.wml|org.apache.xerces|org.apache.xml.serialize
++org.w3c.dom.html|ls
+
+xml-apis
++javax.xml
++org.w3c.dom
++org.xml.sax
+
+The x* jars are used for XML handling
+JDK1.4+ includes most of the functionality (except perhaps xpath in xalan?)
