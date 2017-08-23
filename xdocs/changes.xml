@@ -1,0 +1,267 @@
+<?xml version="1.0"?> 
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+ 
+       http://www.apache.org/licenses/LICENSE-2.0
+ 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>   
+<properties>     
+    <author email="dev AT jmeter.apache.org">JMeter developers</author>     
+    <title>Changes</title>   
+</properties> 
+<body> 
+<section name="Changes"> 
+<style type="text/css"><!--
+h2 { color: #960000; }
+h3 { color: #960000; }
+--></style>
+<note>
+<b>This page details the changes made in the current version only.</b>
+<br></br>
+Earlier changes are detailed in the <a href="changes_history.html">History of Previous Changes</a>.
+</note>
+
+
+<!--  =================== 2.13 =================== -->
+
+<h1>Version 2.13</h1>
+
+Summary
+<ul>
+<li><a href="#New and Noteworthy">New and Noteworthy</a></li>
+<li><a href="#Known bugs">Known bugs</a></li>
+<li><a href="#Incompatible changes">Incompatible changes</a></li>
+<li><a href="#Bug fixes">Bug fixes</a></li>
+<li><a href="#Improvements">Improvements</a></li>
+<li><a href="#Non-functional changes">Non-functional changes</a></li>
+<li><a href="#Thanks">Thanks</a></li>
+
+</ul>
+
+<ch_section>New and Noteworthy</ch_section>
+
+<!-- <ch_category>Improvements</ch_category> -->
+<!-- <ch_title>Sample title</ch_title>
+<p>
+<ul>
+<li><bugzilla>48799</bugzilla> - Add time to establish connection to available sample metrics. Implemented by Andrey Pokhilko (andrey at blazemeter.com) and contributed by BlazeMeter Ltd.</li>
+<li><bugzilla>57500</bugzilla> - Introduce retry behavior for distributed testing. Implemented by Andrey Pokhilko and Dzimitry Kashlach and contributed by BlazeMeter Ltd.</li>
+<li>Sample text</li>
+</ul>
+</p>
+
+<ch_title>Sample title</ch_title>
+<p>Sample text</p>
+<figure width="691" height="215" image="changes/2.10/18_https_test_script_recorder.png"></figure>
+ -->
+
+<!--  =================== Known bugs =================== -->
+
+
+<ch_section>Known bugs</ch_section>
+
+<ul>
+<li>The Once Only controller behaves correctly under a Thread Group or Loop Controller,
+but otherwise its behaviour is not consistent (or clearly specified).</li>
+
+<li>
+The numbers that appear to the left of the green box are the number of active threads / total number of threads, 
+the total number of threads only applies to a locally run test, otherwise it will show 0 (see <bugzilla>55510</bugzilla>).
+</li>
+
+<li>
+Note that there is a <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6396599 ">bug in Java</a>
+on some Linux systems that manifests itself as the following error when running the test cases or JMeter itself:
+<pre>
+ [java] WARNING: Couldn't flush user prefs:
+ java.util.prefs.BackingStoreException:
+ java.lang.IllegalArgumentException: Not supported: indent-number
+</pre>
+This does not affect JMeter operation. This issue is fixed since Java 7b05.
+</li>
+
+<li>
+Note that under some windows systems you may have this WARNING:
+<pre>
+java.util.prefs.WindowsPreferences 
+WARNING: Could not open/create prefs root node Software\JavaSoft\Prefs at root 0
+x80000002. Windows RegCreateKeyEx(...) returned error code 5.
+</pre>
+The fix is to run JMeter as Administrator, it will create the registry key for you, then you can restart JMeter as a normal user and you won't have the warning anymore.
+</li>
+
+<li>
+With Java 1.6 and Gnome 3 on Linux systems, the JMeter menu may not work correctly (shift between mouse's click and the menu). 
+This is a known Java bug (see  <bugzilla>54477</bugzilla>). 
+A workaround is to use a Java 7 runtime (OpenJDK or Oracle JDK).
+</li>
+
+<li>
+With Oracle Java 7 and Mac Book Pro Retina Display, the JMeter GUI may look blurry. 
+This is a known Java bug, see Bug <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8000629" >JDK-8000629</a>.
+A workaround is to use a Java 7 update 40 runtime which fixes this issue.
+</li>
+
+<li>
+You may encounter the following error: <i>java.security.cert.CertificateException: Certificates does not conform to algorithm constraints</i>
+ if you run a HTTPS request on a web site with a SSL certificate (itself or one of SSL certificates in its chain of trust) with a signature
+ algorithm using MD2 (like md2WithRSAEncryption) or with a SSL certificate with a size lower than 1024 bits.
+This error is related to increased security in Java 7 version u16 (MD2) and version u40 (Certificate size lower than 1024 bits), and Java 8 too.
+<br></br>
+To allow you to perform your HTTPS request, you can downgrade the security of your Java installation by editing 
+the Java <b>jdk.certpath.disabledAlgorithms</b> property. Remove the MD2 value or the constraint on size, depending on your case.
+<br></br>
+This property is in this file:
+<pre>JAVA_HOME/jre/lib/security/java.security</pre>
+See  <bugzilla>56357</bugzilla> for details.
+</li>
+
+</ul>
+
+<!-- =================== Incompatible changes =================== -->
+
+<ch_section>Incompatible changes</ch_section>
+
+<ul>
+</ul>
+
+<!-- =================== Bug fixes =================== -->
+
+<ch_section>Bug fixes</ch_section>
+
+<h3>HTTP Samplers and Test Script Recorder</h3>
+<ul>
+<li><bug>57385</bug>Getting empty thread name in xml result for HTTP requests with "Follow Redirects" set. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+</ul>
+
+<h3>Other Samplers</h3>
+<ul>
+</ul>
+
+<h3>Controllers</h3>
+<ul>
+<li><bug>57447</bug>Use only the user listed DNS Servers, when "use custom DNS resolver" option is enabled.</li>
+</ul>
+
+<h3>Listeners</h3>
+<ul>
+<li><bug>57262</bug>Aggregate Report, Aggregate Graph and Summary Report export : headers use keys instead of labels</li>
+<li><bug>57346</bug>Summariser : The + (difference) reports show wrong elapsed time and throughput</li>
+<li><bug>57449</bug>Distributed Testing: Stripped modes do not strip responses from SubResults (affects load tests that use Download of embedded resources). Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+<li><bug>57562</bug>View Results Tree CSS/JQuery Tester : Nothing happens when there is an error in syntax and an exception occurs in jmeter.log</li>
+</ul>
+
+<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
+<ul>
+</ul>
+
+<h3>Functions</h3>
+<ul>
+</ul>
+
+<h3>I18N</h3>
+<ul>
+</ul>
+
+<h3>General</h3>
+<ul>
+<li><bug>57365</bug>Selected LAF is not correctly setup due to call of UIManager.setLookAndFeel too late. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+<li><bug>57364</bug>Options &lt; Look And Feel does not update all windows LAF. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+<li><bug>57394</bug>When constructing an instance with ClassTools#construct(String, int) the integer was ignored and the default constructor was used instead.</li>
+<li><bug>57440</bug>OutOfMemoryError after introduction of JSyntaxTextArea in LoggerPanel due to disableUndo not being taken into account.</li>
+<li><bug>57569</bug>FileServer.reserveFile - inconsistent behaviour when hasHeader is true</li>
+</ul>
+
+<!-- =================== Improvements =================== -->
+
+<ch_section>Improvements</ch_section>
+
+<h3>HTTP Samplers and Test Script Recorder</h3>
+<ul>
+<li><bug>25430</bug>HTTP(S) Test Script Recorder : Make it populate HTTP Authorisation Manager. Partly based on a patch from Dzmitry Kashlach (dzmitrykashlach at gmail.com)</li>
+<li><bug>57381</bug>HTTP(S) Test Script Recorder should display an error if Target Controller references a Recording Controller and no Recording Controller exists. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+<li><bug>57488</bug>Performance : Improve SSLContext reset for Two-way SSL Authentication</li>
+<li><bug>57565</bug>SamplerCreator : Add method to allow implementations to add children to created sampler</li>
+</ul>
+
+<h3>Other samplers</h3>
+<ul>
+    <li><bug>57322</bug>JDBC Test elements: add ResultHandler to deal with ResultSets(cursors) returned by callable statements. Contributed by Yngvi &amp;THORN;&amp;oacute;r Sigurj&amp;oacute;nsson (blitzkopf at gmail.com)</li>
+</ul>
+
+<h3>Controllers</h3>
+<ul>
+</ul>
+
+<h3>Listeners</h3>
+<ul>
+<li><bug>55932</bug>Create a Async BackendListener to allow easy plug of new listener (Graphite, JDBC, Console,...)</li>
+<li><bug>57246</bug>BackendListener : Create a Graphite implementation</li>
+<li><bug>57217</bug>Aggregate graph and Aggregate report improvements (3 configurable percentiles, same data in both, factor out code). Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+<li><bug>57537</bug>BackendListener : Allow implementations to drop samples</li>
+</ul>
+
+<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
+<ul>
+</ul>
+
+<h3>Functions</h3>
+<ul>
+<li><bug>54453</bug>Performance enhancements : Replace Random by ThreadLocalRandom in __Random function</li>
+</ul>
+
+<h3>I18N</h3>
+<ul>
+</ul>
+
+<h3>General</h3>
+<ul>
+<li><bug>57518</bug>Icons for toolbar with several sizes</li>
+</ul>
+<ch_section>Non-functional changes</ch_section>
+<ul>
+<li>Updated to jsoup-1.8.3.jar (from 1.7.3)</li>
+<li>Updated to tika-core and tika-parsers 1.7 (from 1.6)</li>
+<li><bug>57276</bug>RMIC no longer needed since Java 5</li>
+<li><bug>57310</bug>Replace System.getProperty("file.separator") with File.separator throughout (Also "path.separator" with File.pathSeparator)</li>
+<li><bug>57389</bug>Fix potential NPE in converters</li>
+<li><bug>57417</bug>Remove unused method isTemporary from NullProperty. This was a leftover from a refactoring done in 2003.</li>
+<li><bug>57418</bug>Remove unused constructor from Workbench</li>
+<li><bug>57419</bug>Remove unused interface ModelListener.</li>
+<li><bug>57466</bug>IncludeController : Remove an unneeded set creation. Contributed by Benoit Wiart (benoit.wiart at gmail.com)</li>
+<li>Added property loggerpanel.usejsyntaxtext to disable the use of JSyntaxTextArea for the Console Logger (in case of memory or other issues)</li>
+</ul>
+
+<ch_section>Thanks</ch_section>
+<p>We thank all contributors mentioned in bug and improvement sections above:
+<ul>
+<li><a href="http://ubikloadpack.com">Ubik Load Pack</a></li>
+<li>Yngvi &amp;THORN;&amp;oacute;r Sigurj&amp;oacute;nsson (blitzkopf at gmail.com)</li>
+<li>Dzmitry Kashlach (dzmitrykashlach at gmail.com)</li>
+<li><a href="http://blazemeter.com">BlazeMeter Ltd.</a></li>
+<li>Benoit Wiart (benoit.wiart at gmail.com)</li>
+</ul>
+
+<br/>
+We also thank bug reporters who helped us improve JMeter. <br/>
+For this release we want to give special thanks to the following reporters for the clear reports and tests made after our fixes:
+<ul>
+<li>Chaitanya Bhatt (bhatt.chaitanya@gmail.com) for his thorough testing of new BackendListener and Graphite Client implementation.</li>
+</ul>
+
+Apologies if we have omitted anyone else.
+ </p>
+</section> 
+</body> 
+</document>
